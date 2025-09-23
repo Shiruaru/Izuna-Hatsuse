@@ -1,0 +1,96 @@
+datasource db {
+		provider = "postgresql"
+		url = env("DATABASE_URL")
+}
+
+generator client {
+		provider = "prisma-client-js"
+		previewFeatures = ["driverAdapters", "relationJoins"]
+}
+
+model Guild {
+		id							String			@id
+		name						String
+		wlcChannel			String?
+		ruleChannel			String?
+		warnChannel			String?
+		memberRole			String?
+		moderatorRole		String?
+		adminRole				String?
+		warns						Warn[]
+		ticketCategory	String?
+		tickets					Ticket[]
+		commandsConfig	CommandConfig[]
+}
+
+model Logs {
+		guildId							String @id
+		messageLogStatus		Boolean
+		messageLogChannel		String?
+		adminLogStatus			Boolean
+		adminLogChannel			String?
+		memberLogStatus			Boolean
+		memberLogChannel		String?
+}
+
+model Security {
+		guildId							String			@id
+		status							Boolean			@default(false)
+		adminRoles					String?
+		moderatorRoles			String?
+		antiDiscordInvite		Boolean			@default(false)
+}
+
+model Warn {
+		id							Int					@id @default(autoincrement())
+		guild						Guild				@relation(fields: [guildId], references: [id])
+		guildId					String
+		memberId				String
+		reason					String
+		authorId				String
+		time						DateTime		@default(now())
+}
+
+model Commands {
+		id							Int					@id @default(autoincrement())
+		name						String
+		description			String
+		permissions			String
+		status					Boolean			@default(true) // Wherever the command is enabled or not
+		custom					Boolean
+		configs					CommandConfig[]
+}
+
+// Chaque commandes va avoir sa config lors-ce que la commande "init_db" est entrée, 
+// on pourra à l'occasion mettre les commandes de sécurité sur false par défaut pendant le process
+model CommandConfig { 
+		id							Int					@id	@default(autoincrement())
+		guild						Guild				@relation(fields: [guildId], references: [id])
+		guildId					String
+		commandId				Int					
+		command					Commands		@relation(fields: [commandId], references: [id])
+		status					Boolean			@default(true)
+}
+
+model Ticket {
+		id							Int					@id @default(autoincrement())
+		guild						Guild				@relation(fields: [guildId], references: [id])
+		guildId					String			
+		title						String
+		authorId				String
+		status					Boolean
+		comment					String?
+		messageId				String			@unique			// ID of the openning message 
+		claimedById			String?
+		startDate				DateTime		@default(now())
+		closeDate				DateTime?
+}
+
+
+// Auth System
+model Auth {
+		id							Int					@id @default(autoincrement())
+		token						String			// Discord token
+		accessKey				String			// Application Token
+		discordId				String			
+}

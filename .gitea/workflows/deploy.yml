@@ -1,0 +1,50 @@
+name: Deploy Bot
+
+on:
+  push:
+    branches:
+      - 2.0
+
+jobs:
+  deploy:
+    runs-on: linux_amd64
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Ensure bot folder exists
+        run: mkdir -p /var/izuna/izuna-gitea-runner/bot
+
+      - name: Sync bot code
+        working-directory: /var/izuna/izuna-gitea-runner/bot
+        run: |
+          if [ ! -d ".git" ]; then
+            git clone git@gitea.owomnipotent.owo:shiruaru/izuna.git .
+          else
+            git reset --hard
+            git pull origin 2.0
+          fi
+
+      - name: Run database migrations
+        working-directory: /var/izuna/izuna-gitea-runner/bot
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Install dependencies
+        working-directory: /var/izuna/izuna-gitea-runner/bot
+        run: |
+          export PATH="$HOME/.bun/bin:$PATH"
+          bun install
+
+      - name: Restart bot with pm2
+        working-directory: /var/izuna/izuna-gitea-runner/bot
+        run: |
+          export PATH="$HOME/.bun/bin:$PATH"
+          pm2 restart izuna || pm2 start src/main.ts --name izuna
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          WANIKANI_API_KEY: ${{ secrets.WANIKANI_API_KEY }}
+          STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}

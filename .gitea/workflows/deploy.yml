@@ -20,7 +20,7 @@ jobs:
         working-directory: /var/izuna/izuna-gitea-runner/bot
         run: |
           if [ ! -d ".git" ]; then
-            git clone git@gitea.owomnipotent.owo:shiruaru/izuna.git .
+            git clone https://gitea.owomnipotent.owo/Shiruaru/Izuna-Hatsuse.git .
           else
             git reset --hard
             git pull origin 2.0

@@ -72,7 +72,7 @@ export default class Help extends Command {
             .setTitle("Liste des commandes")
             .setDescription("Voici la liste des commandes disponibles. Utilisez `/help commande` pour plus de détails sur une commande spécifique.")
             .setColor("#7F0856")
-            .setFooter({ text: `${this.client.commands.size} commandes disponibles` });
+            .setFooter({ text: `© Izuna | [GitHub](https://github.com/Shiruaru/Izuna-Hatsuse)` });
 
         // Ajouter chaque catégorie comme un champ dans l'embed
         for (const [category, commands] of Object.entries(categories)) {

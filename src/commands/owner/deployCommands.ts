@@ -31,7 +31,7 @@ export default class Ping extends Command {
 				})
 
 				// Tuf Chill server
-				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "1420471805252210821"), {
+				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
 						body: interactions
 				})
 

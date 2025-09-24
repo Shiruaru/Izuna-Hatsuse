@@ -30,6 +30,11 @@ export default class Ping extends Command {
 						body: interactions
 				})
 
+				// Tuf Chill server
+				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "1420471805252210821"), {
+						body: interactions
+				})
+
 				logger.status(`Successfuly deployed ${commands.length} commands`)
 
 				// Then add command to database

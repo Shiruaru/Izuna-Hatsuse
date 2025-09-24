@@ -43,7 +43,7 @@ export default class Help extends Command {
                     { name: "Permission requise", value: command.default_member_permissions ? `\`${new PermissionsBitField(command.default_member_permissions).toArray().join(", ")}\`` : "Aucune", inline: true }
                 )
                 .setColor("#7F0856")
-								.setFooter({ text: `© Izuna` });
+								.setFooter({ text: `© Izuna | [GitHub](https://github.com/Shiruaru/Izuna-Hatsuse)` });
 
             if (command.options && command.options.length > 0) {
                 embed.addFields({ 

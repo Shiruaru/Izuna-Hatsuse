@@ -35,7 +35,7 @@ export default class IzunaClient extends Client implements IIzuna {
 						discord_token: process.env.DISCORD_TOKEN!,
 						wanikani_token: process.env.WANIKANI_API_KEY!,
 						test_server_id: "926874968925548554",
-						client_id: "1420752807925121154",
+						client_id: process.env.DISCORD_CLIENT_ID,
 						embed_colors: "#7F0856"
 				}
 				this.function = new IzunaFunctions()

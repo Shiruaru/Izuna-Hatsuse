@@ -35,7 +35,7 @@ export default class IzunaClient extends Client implements IIzuna {
 						discord_token: process.env.DISCORD_TOKEN!,
 						wanikani_token: process.env.WANIKANI_API_KEY!,
 						test_server_id: "926874968925548554",
-						client_id: "1294346698088513568",
+						client_id: "1420752807925121154",
 						embed_colors: "#7F0856"
 				}
 				this.function = new IzunaFunctions()
@@ -54,11 +54,7 @@ export default class IzunaClient extends Client implements IIzuna {
 		}
 
 		async databaseConfig() {
-				const connectionString = process.env.DATABASE_URL
-
-				const pool = new Pool({ connectionString })
-				const adapter = new PrismaPg(pool)
-				const prisma = new PrismaClient({ adapter })
+				const prisma = new PrismaClient()
 
 				await prisma.$queryRaw`SELECT 1 as test`; // Test if database is up
 

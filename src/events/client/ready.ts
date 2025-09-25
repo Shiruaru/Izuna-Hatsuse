@@ -16,6 +16,29 @@ export default class Ready extends Event {
 
 		async Execute() {
 				console.log('Izuna is online on dev environment')
+
+				const commands = this.GetJson(this.client.commands);
+				const buttons = this.GetJson(this.client.buttons)
+
+				const interactions = [...commands, ...buttons];
+				const rest = new REST().setToken(this.client.config.discord_token)
+
+				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, this.client.config.test_server_id), {
+						body: interactions
+				})
+
+				logger.status(`Successfuly deployed ${commands.length} commands`)
+
+				// Then add command to database
+				// first identify the new commands
+
+				let newCommands = [];
+				let databaseCommands = await this.client.databaseClient?.commands.findMany()
+				for (const [commandName, command] of this.client.commands) {
+						if (databaseCommands?.find(dbCommand => dbCommand.name == commandName)) continue;
+						
+						newCommands.push(command)
+				}
 		}
 
 		GetJson(commands: Collection<string, Command | Button>): object[] {

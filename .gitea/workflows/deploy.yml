@@ -48,7 +48,7 @@ jobs:
         working-directory: /var/izuna/izuna-gitea-runner/bot
         run: |
           export PATH="$HOME/.bun/bin:$PATH"
-          pm2 restart izuna || pm2 start src/main.ts --name izuna
+          pm2 restart izuna || pm2 start ecosystem.config.js
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}

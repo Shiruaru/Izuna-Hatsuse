@@ -39,7 +39,8 @@ jobs:
           bun install
 
       - name: Debug env var length
-        run: echo "Length: ${#DISCORD_CLIENT_ID}"
+        run: |
+            echo "Length: ${#DISCORD_CLIENT_ID}"
         env:
           DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
 

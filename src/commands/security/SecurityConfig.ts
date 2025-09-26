@@ -58,7 +58,7 @@ export default class SecurityConfig extends Command {
 								
 								// Buttons 
 								const buttons = new ButtonBuilder()
-										.setCustomId("toggle-anti-spam")
+										.setCustomId("toggle-anti-raid")
 										.setLabel(antiDiscordInviteStatus?.antiDiscordInvite ? "Désactiver" : "Activer")
 										.setStyle(antiDiscordInviteStatus?.antiDiscordInvite ? ButtonStyle.Danger : ButtonStyle.Primary);
 

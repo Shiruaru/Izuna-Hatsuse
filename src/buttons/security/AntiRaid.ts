@@ -41,9 +41,7 @@ export default class ToggleAntiRaid extends Button {
             .setColor("#7F0856")
             .setFooter({ text: `© Izuna` });
 
-        interaction.reply.edit({ embeds: [newEmbed] })
-        
-
-        interaction.reply({ content: "Claim by", flags: "Ephemeral" })
+        interaction.message.edit({ embeds: [embed] });
+        interaction.reply("Status updated");
     }
 }

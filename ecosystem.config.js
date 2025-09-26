@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "izuna",
+      name: "izuna-dev",
       script: "src/main.ts",
       interpreter: "bun",
       env: {

@@ -1,4 +1,4 @@
-import { Events, Message } from "discord.js";
+import { Events, Message, PermissionFlagsBits } from "discord.js";
 import Event from "../../utils/classes/Event";
 import IzunaClient from "../../utils/classes/IzunaClient";
 import internal = require("stream");
@@ -21,7 +21,7 @@ export default class MessageCreate extends Event {
 				console.log('Message received');
 				if (discordInviteProtection?.antiDiscordInvite) {
 						console.log("Toggling security ");
-						if (message.content.includes("discord.gg/")) {
+						if (message.content.includes("discord.gg/") && !message.member?.permissions.has(PermissionFlagsBits.MentionEveryone)) {
 								await message.delete()
 								return
 						}

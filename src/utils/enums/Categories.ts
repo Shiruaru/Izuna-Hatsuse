@@ -6,7 +6,8 @@ enum Categories {
     Ticket="Ticket",
     Custom="Custom",
 		Game="Game",
-		Security="Security"
+		Security="Security",
+		Hoyo="Hoyo"
 }
 
 export default Categories

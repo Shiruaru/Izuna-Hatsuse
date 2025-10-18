@@ -6,8 +6,6 @@ import Handler from "./Handler";
 import Command from "./Command";
 import logger from "../logger";
 
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import Button from "./Button";
 
@@ -33,9 +31,8 @@ export default class IzunaClient extends Client implements IIzuna {
 
 				this.config = {
 						discord_token: process.env.DISCORD_TOKEN!,
-						wanikani_token: process.env.WANIKANI_API_KEY!,
 						test_server_id: "926874968925548554",
-						client_id: process.env.DISCORD_CLIENT_ID,
+						client_id: process.env.DISCORD_CLIENT_ID!,
 						embed_colors: "#7F0856"
 				}
 				this.function = new IzunaFunctions()

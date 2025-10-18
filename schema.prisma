@@ -20,7 +20,6 @@ model Guild {
 		warns						Warn[]
 		ticketCategory	String?
 		tickets					Ticket[]
-		commandsConfig	CommandConfig[]
 }
 
 model Logs {
@@ -51,27 +50,6 @@ model Warn {
 		time						DateTime		@default(now())
 }
 
-model Commands {
-		id							Int					@id @default(autoincrement())
-		name						String
-		description			String
-		permissions			String
-		status					Boolean			@default(true) // Wherever the command is enabled or not
-		custom					Boolean
-		configs					CommandConfig[]
-}
-
-// Chaque commandes va avoir sa config lors-ce que la commande "init_db" est entrée, 
-// on pourra à l'occasion mettre les commandes de sécurité sur false par défaut pendant le process
-model CommandConfig { 
-		id							Int					@id	@default(autoincrement())
-		guild						Guild				@relation(fields: [guildId], references: [id])
-		guildId					String
-		commandId				Int					
-		command					Commands		@relation(fields: [commandId], references: [id])
-		status					Boolean			@default(true)
-}
-
 model Ticket {
 		id							Int					@id @default(autoincrement())
 		guild						Guild				@relation(fields: [guildId], references: [id])
@@ -93,4 +71,14 @@ model Auth {
 		token						String			// Discord token
 		accessKey				String			// Application Token
 		discordId				String			
+}
+
+model Hoyolab {
+		discordId				String					@id @default("ERROR")
+		status					Boolean
+		ltoken					String
+		ltuid						String
+		genshinUID			String
+		hsrUID					String
+		zzzUID					String
 }

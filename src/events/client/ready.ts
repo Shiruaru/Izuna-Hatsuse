@@ -28,17 +28,6 @@ export default class Ready extends Event {
 				})
 
 				logger.status(`Successfuly deployed ${commands.length} commands`)
-
-				// Then add command to database
-				// first identify the new commands
-
-				let newCommands = [];
-				let databaseCommands = await this.client.databaseClient?.commands.findMany()
-				for (const [commandName, command] of this.client.commands) {
-						if (databaseCommands?.find(dbCommand => dbCommand.name == commandName)) continue;
-						
-						newCommands.push(command)
-				}
 		}
 
 		GetJson(commands: Collection<string, Command | Button>): object[] {

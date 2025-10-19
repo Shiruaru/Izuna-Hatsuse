@@ -40,22 +40,6 @@ export default class InitDB extends Command {
 						interaction.reply({content:"An Error occured please contact bot owner"})
 				})
 
-				const commands = await this.client.databaseClient?.commands.findMany();
-
-				if (!commands) return interaction.reply("Commands not set in database, please contact bot owner for further informations");
-
-				for (let command of commands) {
-						// Insert it in command config
-
-						await this.client.databaseClient?.commandConfig.create({
-								data: {
-										guildId: interaction.guild.id,
-										commandId: command.id,
-										status: true
-								}
-						})
-				}
-
 				// then create the Security config
 
 				await this.client.databaseClient?.security.create({

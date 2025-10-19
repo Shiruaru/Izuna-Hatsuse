@@ -1,6 +1,6 @@
 import IzunaClient from "../../utils/classes/IzunaClient";
 import Event from "../../utils/classes/Event";
-import { Collection, Events, REST, Routes } from "discord.js";
+import { Collection, Events, REST, Routes, TextChannel } from "discord.js";
 import Command from "../../utils/classes/Command";
 import logger from "../../utils/logger";
 import Button from "../../utils/classes/Button";
@@ -28,6 +28,11 @@ export default class Ready extends Event {
 				})
 
 				logger.status(`Successfuly deployed ${commands.length} commands`)
+
+
+				this.client.channels.fetch('926874969399500804').then(channel => {
+						(channel as TextChannel).send('Izuna Logged')
+				}).catch(_ => logger.error('Unable to send login message'))
 		}
 
 		GetJson(commands: Collection<string, Command | Button>): object[] {

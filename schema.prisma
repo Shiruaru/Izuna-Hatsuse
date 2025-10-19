@@ -76,7 +76,7 @@ model Auth {
 model Hoyolab {
 		discordId				String					@id @default("ERROR")
 		status					Boolean
-		ltoken					String
+		ltoken					String					
 		ltuid						String
 		genshinUID			String
 		hsrUID					String

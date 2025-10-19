@@ -53,8 +53,6 @@ export default class IzunaClient extends Client implements IIzuna {
 		async databaseConfig() {
 				const prisma = new PrismaClient()
 
-				await prisma.$queryRaw`SELECT 1 as test`; // Test if database is up
-
 				this.databaseClient = prisma;
 		}
 }

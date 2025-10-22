@@ -4,6 +4,7 @@ import { Collection, Events, REST, Routes, TextChannel } from "discord.js";
 import Command from "../../utils/classes/Command";
 import logger from "../../utils/logger";
 import Button from "../../utils/classes/Button";
+import hoyoDaily from "../../utils/hoyoDaily";
 
 export default class Ready extends Event {
 		constructor(Izuna: IzunaClient) {
@@ -34,7 +35,7 @@ export default class Ready extends Event {
 						(channel as TextChannel).send('Izuna Logged')
 				}).catch(_ => logger.error('Unable to send login message'))
 
-				require('../../utils/hoyoDaily')(this.client);
+				hoyoDaily(this.client)
 		}
 
 		GetJson(commands: Collection<string, Command | Button>): object[] {

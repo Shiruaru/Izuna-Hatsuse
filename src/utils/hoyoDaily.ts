@@ -21,7 +21,8 @@ enum Game {
 }
 
 export default function(Izuna: IzunaClient) {
-		schedule.scheduleJob('0 0 8 * * *', async () => {
+		console.log("Starting Schedule");
+		schedule.scheduleJob('0 0 10 17 * *', async () => {
 				// Retrieve all users registered and with active function
 				const users = await Izuna.databaseClient?.hoyolab.findMany({
 						where: { status: true }

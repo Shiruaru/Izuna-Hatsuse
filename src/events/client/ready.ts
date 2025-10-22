@@ -33,6 +33,8 @@ export default class Ready extends Event {
 				this.client.channels.fetch('926874969399500804').then(channel => {
 						(channel as TextChannel).send('Izuna Logged')
 				}).catch(_ => logger.error('Unable to send login message'))
+
+				require('../../utils/hoyoDaily');
 		}
 
 		GetJson(commands: Collection<string, Command | Button>): object[] {

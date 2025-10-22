@@ -4,7 +4,7 @@ import IzunaClient from "./classes/IzunaClient";
 import logger from "./logger";
 import { EmbedBuilder, TextChannel } from "discord.js";
 
-type User = {
+export type User = {
     discordId: string;
     status: boolean;
     ltoken: string;
@@ -22,7 +22,7 @@ enum Game {
 
 export default function(Izuna: IzunaClient) {
 		console.log("Starting Schedule");
-		schedule.scheduleJob('0 0 10 19 * *', async () => {
+		schedule.scheduleJob('0 0 8 * * *', async () => {
 				// Retrieve all users registered and with active function
 				const users = await Izuna.databaseClient?.hoyolab.findMany({
 						where: { status: true }
@@ -39,8 +39,9 @@ export default function(Izuna: IzunaClient) {
 		})
 }
 
-async function claimDaily(Izuna: IzunaClient, user: User) {
+export async function claimDaily(Izuna: IzunaClient, user: User) {
 		if (user.genshinUID !== "") {
+				console.log("claiming genshin")
 				const genshin = new GenshinImpact({
 						cookie: {
 								ltokenV2: user.ltoken,
@@ -50,7 +51,8 @@ async function claimDaily(Izuna: IzunaClient, user: User) {
 				})
 
 				const claim = await genshin.daily.claim()
-				sendEmbed(Izuna, Game.Genshin, claim)
+				console.log("claimed")
+				await sendEmbed(Izuna, Game.Genshin, claim)
 		}
 
 		if (user.hsrUID !== "") {
@@ -62,7 +64,7 @@ async function claimDaily(Izuna: IzunaClient, user: User) {
 				})
 
 				const claim = await hsr.daily.claim()
-				sendEmbed(Izuna, Game.HSR, claim);
+				await sendEmbed(Izuna, Game.HSR, claim);
 		}
 
 		if (user.zzzUID !== "") {
@@ -74,13 +76,13 @@ async function claimDaily(Izuna: IzunaClient, user: User) {
 				})
 
 				const claim = await zzz.daily.claim();
-				sendEmbed(Izuna, Game.ZZZ, claim);
+				await sendEmbed(Izuna, Game.ZZZ, claim);
 		}
 }
 
 async function sendEmbed(Izuna: IzunaClient, game: Game, claim: IDailyClaim) {
 		const embed = new EmbedBuilder()
-				.setTitle(game + " Daily Reward")
+				.setTitle(game.toString() + " Daily Reward")
 				.setThumbnail(claim.reward?.award.icon!)
 				.addFields(
 						{
@@ -92,8 +94,9 @@ async function sendEmbed(Izuna: IzunaClient, game: Game, claim: IDailyClaim) {
 				.setColor("#7F0856")
 
 		const channel = Izuna.channels.cache.get('926874969399500804')
+		console.log(channel);
 
-		if (!channel?.isTextBased) {
-				(channel as TextChannel)?.send({ embeds: [embed] })
+		if (channel?.isTextBased) {
+				await (channel as TextChannel)?.send({ embeds: [embed] })
 		}
 }

@@ -82,3 +82,10 @@ model Hoyolab {
 		hsrUID					String
 		zzzUID					String
 }
+
+model RoleReaction {
+		id							Int					@id @default(autoincrement())
+		guildId					String
+		messageId				String
+		roleId					String
+}

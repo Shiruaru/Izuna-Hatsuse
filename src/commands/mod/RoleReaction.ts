@@ -20,7 +20,7 @@ export default class RoleReaction extends Command {
 										name: "message-id",
 										description: "Id du message à enregistrer",
 										required: true,
-										type: ApplicationCommandOptionType.Number
+										type: ApplicationCommandOptionType.String
 								},
 								{
 										name: "reaction",
@@ -40,13 +40,24 @@ export default class RoleReaction extends Command {
 
 		async Execute(interaction: ChatInputCommandInteraction<CacheType>) {
 				// Get the datas
-				const messageId = interaction.options.getNumber("message-id")!;
+				const messageId = interaction.options.getString("message-id")!;
 				const reaction = interaction.options.getString("reaction")!;
 				const role = interaction.options.getRole("role")!;
 
 
 				// Add reaction to the message
 				const messgage = await interaction.channel?.messages.fetch(messageId.toString());
+				if (!messgage) {
+						interaction.reply("Invalid message provided");
+				}
 
+				await messgage?.react(reaction)
+				.catch(err => {
+						interaction.reply("An error occured");
+						logger.warn(err);
+				})
+
+
+				// then save the role reaction to database
 		}
 }

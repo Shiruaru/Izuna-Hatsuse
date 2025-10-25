@@ -59,5 +59,19 @@ export default class RoleReaction extends Command {
 
 
 				// then save the role reaction to database
+				await this.client.databaseClient?.roleReaction.create({
+						data: {
+								guildId: interaction.guildId!, // ok because dm_permission = false
+								messageId: messageId,
+								roleId: role.id,
+								reaction: reaction
+						}
+				}).catch(err => {
+						interaction.reply("An error occured")
+						logger.error("An error occured saving data to database")
+						console.log(err)
+				})
+
+				interaction.reply("Reaction role created")
 		}
 }

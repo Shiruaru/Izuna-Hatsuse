@@ -88,4 +88,5 @@ model RoleReaction {
 		guildId					String
 		messageId				String
 		roleId					String
+		reaction				String
 }

@@ -1,5 +1,5 @@
 import IIzuna from "../interfaces/IIzuna";
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import IConfig from "../interfaces/IConfig";
 import IzunaFunctions from "./IzunaFunctions";
 import Handler from "./Handler";
@@ -18,12 +18,22 @@ export default class IzunaClient extends Client implements IIzuna {
 		databaseClient: PrismaClient | undefined;
 
 		constructor() {
-				super({ intents: [
-						GatewayIntentBits.Guilds, // Guild information
-						GatewayIntentBits.GuildMembers,
-						GatewayIntentBits.MessageContent,
-						GatewayIntentBits.GuildMessages
-				] })
+				super({ 
+						intents: [
+								GatewayIntentBits.Guilds, // Guild information
+								GatewayIntentBits.GuildMembers,
+								GatewayIntentBits.MessageContent,
+								GatewayIntentBits.GuildMessages,
+								GatewayIntentBits.GuildPresences,
+								GatewayIntentBits.GuildMessageReactions
+						],
+						partials: [ // Required to get message prior bot startup
+								Partials.Message,
+								Partials.Channel,
+								Partials.Reaction,
+								Partials.User
+						]
+				})
 				this.handler = new Handler(this)
 
 				this.commands = new Collection();

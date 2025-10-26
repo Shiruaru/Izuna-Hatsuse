@@ -38,6 +38,7 @@ model Security {
 		adminRoles					String?
 		moderatorRoles			String?
 		antiDiscordInvite		Boolean			@default(false)
+		antiSpam						Boolean			@default(false)
 }
 
 model Warn {

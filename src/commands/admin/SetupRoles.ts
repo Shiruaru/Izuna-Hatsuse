@@ -39,11 +39,19 @@ export default class Setup extends Command {
 				const configRole = interaction.options.getString("role_type");
 				const role = interaction.options.getRole("role");
 
+				if (!this.client.databaseClient?.security.findFirst({where: { guildId: interaction.guildId! }})) {
+						this.client.databaseClient?.security.create({
+								data: {
+										guildId: interaction.guildId!,
+										status: false
+								}
+						})
+				}
 
-				const response = await this.client.databaseClient?.guild.update({
-						where: { id: interaction.guild?.id },
+				const response = await this.client.databaseClient?.security.update({
+						where: { guildId: interaction.guild?.id },
 						data: {
-								[`${configRole}Role`]: role?.id
+								[`${configRole}Roles`]: role?.id
 						}
 				})
 

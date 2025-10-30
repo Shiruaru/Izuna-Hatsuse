@@ -21,7 +21,8 @@ export default class SecurityConfig extends Command {
 										type: ApplicationCommandOptionType.String,
 										required: true, // TODO: Make it false and enable the user to get prompted by an embed along with a select menu to choose which feature to configure
 										choices: [
-												{ name: "anti-raid", value: "anti-raid" }
+												{ name: "anti-raid", value: "anti-raid" },
+												{ name: "anti-spam", value: "anti-spam" }
 										]
 								}
 						]
@@ -36,21 +37,29 @@ export default class SecurityConfig extends Command {
 						return
 				}
 
+				let securityConfig  = await this.client.databaseClient?.security.findFirst({
+						where: {
+								guildId: interaction.guildId!
+						}
+				})
+
+				if (!securityConfig) {
+						securityConfig = await this.client.databaseClient?.security.create({
+								data: {
+										guildId: interaction.guildId!,
+										antiSpam: false,
+										antiDiscordInvite: false
+								}
+						})
+				}
+
 				switch (feature) {
-						case "anti-raid": 
-								const antiDiscordInviteStatus = await this.client.databaseClient?.security.findFirst({
-										select: {
-												antiDiscordInvite: true
-										},
-										where: {
-												guildId: interaction.guild?.id
-										}
-								})
+						case "anti-raid": {
 								const embed = new EmbedBuilder()
 										.setTitle("Sécurité Anti Raid")
 										.setDescription("Supprime automatiquement tous les messages contenant une invitation discord")
 										.addFields([
-												{ name: "Status", value: antiDiscordInviteStatus?.antiDiscordInvite ? "🟢 Active" : "🔴 Disabled" }
+												{ name: "Status", value: securityConfig?.antiDiscordInvite ? "🟢 Active" : "🔴 Disabled" }
 										])
 										.setColor("#7F0856")
 										.setFooter({ text: `© Izuna` });
@@ -59,19 +68,46 @@ export default class SecurityConfig extends Command {
 								// Buttons 
 								const buttons = new ButtonBuilder()
 										.setCustomId("toggle-anti-raid")
-										.setLabel(antiDiscordInviteStatus?.antiDiscordInvite ? "Désactiver" : "Activer")
-										.setStyle(antiDiscordInviteStatus?.antiDiscordInvite ? ButtonStyle.Danger : ButtonStyle.Primary);
+										.setLabel(securityConfig?.antiDiscordInvite ? "Désactiver" : "Activer")
+										.setStyle(securityConfig?.antiDiscordInvite ? ButtonStyle.Danger : ButtonStyle.Primary);
 
 								const row = new ActionRowBuilder<ButtonBuilder>()
 										.addComponents(buttons);
 
 								interaction.reply({ embeds: [embed], components: [row] })
 
-								break
+								break;
+
+						}
+						case "anti-spam": {
+								const embed = new EmbedBuilder()
+										.setTitle("Sécurité Anti Spam")
+										.setDescription("Détecte et supprime les cas de spam, timeout l'utilisateur responsable")
+										.addFields([
+												{ name: "Status", value: securityConfig?.antiSpam ? "🟢 Active" : "🔴 Disabled" }
+										])
+										.setColor("#7F0856")
+										.setFooter({ text: `© Izuna` });
+
+								
+								// Buttons 
+								const buttons = new ButtonBuilder()
+										.setCustomId("toggle-anti-spam")
+										.setLabel(securityConfig?.antiSpam ? "Désactiver" : "Activer")
+										.setStyle(securityConfig?.antiSpam ? ButtonStyle.Danger : ButtonStyle.Primary);
+
+								const row = new ActionRowBuilder<ButtonBuilder>()
+										.addComponents(buttons);
+
+								interaction.reply({ embeds: [embed], components: [row] })
+
+								break;
+
+						}
 
 						default: 
 								interaction.reply("Fonctionnalité non reconnue");
-								logger.error("Wrong feature received from a choice option")
+								logger.error("Wrong feature received from a choice option");
 				}
 		}
 }

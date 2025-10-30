@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonInteraction, ButtonStyle, CategoryChannel, EmbedBuilder, PermissionFlagsBits, PermissionsBitField } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, CategoryChannel, EmbedBuilder, PermissionFlagsBits, PermissionsBitField } from "discord.js";
 import IzunaClient from "../../utils/classes/IzunaClient";
 import Categories from "../../utils/enums/Categories";
 import Button from "../../utils/classes/Button";

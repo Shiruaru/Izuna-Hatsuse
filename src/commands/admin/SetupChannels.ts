@@ -95,6 +95,17 @@ export default class Setup extends Command {
 				} else {
 						const channelConfigName = configChannel?.split("_")[1] + "LogChannel";
 						const statusConfigName = configChannel?.split("_")[1] + "LogStatus";
+						if (!await this.client.databaseClient?.logs.findFirst({ where: { guildId: interaction.guildId! } })) {
+								await this.client.databaseClient?.logs.create({
+										data: {
+												guildId: interaction.guildId!,
+												messageLogStatus: false,
+												adminLogStatus: false,
+												memberLogStatus: false
+										}
+								})
+						}
+
 						const created = await this.client.databaseClient?.logs.update({
 								where: {
 										guildId: interaction.guild.id

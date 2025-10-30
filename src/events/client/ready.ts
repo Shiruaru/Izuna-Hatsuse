@@ -29,9 +29,9 @@ export default class Ready extends Event {
 				})
 
 				// WARNING: TUF  server, disabling for dev purpose
-				// await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
-				// 		body: interactions
-				// })
+				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
+						body: interactions
+				})
 
 				logger.status(`Successfuly deployed ${commands.length} commands`)
 

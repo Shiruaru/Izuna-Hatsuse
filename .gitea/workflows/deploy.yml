@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - latest
+      - main
 
 jobs:
-  deploy:
+  # ===============================
+  # Test deployment (latest branch)
+  # ===============================
+  deploy-test:
+    if: github.ref == 'refs/heads/latest'
     runs-on: linux_amd64
 
     steps:
@@ -44,13 +49,7 @@ jobs:
           export PATH="$HOME/.bun/bin:$PATH"
           bun install
 
-      - name: Debug env var length
-        run: |
-            echo "Length: ${#DISCORD_CLIENT_ID}"
-        env:
-          DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
-
-      - name: Restart bot with pm2
+      - name: Restart test bot with pm2
         working-directory: /var/izuna/izuna-gitea-runner/bot
         run: |
           export PATH="$HOME/.bun/bin:$PATH"
@@ -58,6 +57,46 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-          WANIKANI_API_KEY: ${{ secrets.WANIKANI_API_KEY }}
-          STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
           DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+
+
+  # ===============================
+  # Production deployment (main branch)
+  # ===============================
+  deploy-prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: linux_amd64
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Ensure bot folder exists
+        run: mkdir -p /var/izuna/izuna-gitea-runner/prod-bot
+
+      - name: Sync bot code
+        working-directory: /var/izuna/izuna-gitea-runner/prod-bot
+        run: |
+          if [ ! -d ".git" ]; then
+            git clone https://gitea.owomnipotent.owo/Shiruaru/Izuna-Hatsuse.git .
+          else
+            git reset --hard
+            git pull origin main
+          fi
+
+      - name: Run database migrations
+        working-directory: /var/izuna/izuna-gitea-runner/prod-bot
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+
+      - name: Generate Prisma Client
+        working-directory: /var/izuna/izuna-gitea-runner/prod-bot
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+
+      - name: Install dependencies
+        working-directory: /var/izuna/izuna-gitea-runner/prod-bot
+        run: |
+          export PATH="$HOME

@@ -99,4 +99,15 @@ jobs:
       - name: Install dependencies
         working-directory: /var/izuna/izuna-gitea-runner/prod-bot
         run: |
-          export PATH="$HOME
+          export PATH="$HOME/.bun/bin:$PATH"
+          bun install
+
+      - name: Restart production bot with pm2
+        working-directory: /var/izuna/izuna-gitea-runner/prod-bot
+        run: |
+          export PATH="$HOME/.bun/bin:$PATH"
+          pm2 restart izuna-prod --update-env || pm2 start ecosystem.config.js
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          DISCORD_TOKEN: ${{ secrets.PROD_DISCORD_TOKEN }}
+          DISCORD_CLIENT_ID: ${{ secrets.PROD_DISCORD_CLIENT_ID }}

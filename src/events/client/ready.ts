@@ -29,9 +29,17 @@ export default class Ready extends Event {
 				})
 
 				// WARNING: TUF  server, disabling for dev purpose
-				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
-						body: interactions
-				})
+				const env = process.env.ENVIRONMENT;
+				if (env == "TEST") {
+						await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
+								body: interactions
+						})
+				}
+
+				if (env == "PROD") {
+						// Deploying commands globally
+						await rest.put(Routes.applicationCommands(this.client.config.client_id), { body: commands });
+				}
 
 				logger.status(`Successfuly deployed ${commands.length} commands`)
 

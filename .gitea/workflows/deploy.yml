@@ -111,3 +111,4 @@ jobs:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
           DISCORD_TOKEN: ${{ secrets.PROD_DISCORD_TOKEN }}
           DISCORD_CLIENT_ID: ${{ secrets.PROD_DISCORD_CLIENT_ID }}
+          ENVIRONMENT: ${{ secrets.PROD_ENVIRONMENT }}

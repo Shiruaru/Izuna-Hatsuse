@@ -40,7 +40,7 @@ export default class Ready extends Event {
 				if (env == "PROD") {
 						// Deploying commands globally
 						logger.warn("RUNNIN ON PROD ENVIRONMENT, DEPLOYING GLOBAL COMMANDS");
-						await rest.put(Routes.applicationCommands(this.client.config.client_id), { body: commands });
+						await rest.put(Routes.applicationCommands(this.client.config.client_id), { body: interactions });
 				}
 
 				logger.status(`Successfuly deployed ${commands.length} commands`)

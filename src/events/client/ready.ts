@@ -31,6 +31,7 @@ export default class Ready extends Event {
 				// WARNING: TUF  server, disabling for dev purpose
 				const env = process.env.ENVIRONMENT;
 				if (env == "TEST") {
+						logger.status("Running on TEST env");
 						await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
 								body: interactions
 						})
@@ -38,6 +39,7 @@ export default class Ready extends Event {
 
 				if (env == "PROD") {
 						// Deploying commands globally
+						logger.warn("RUNNIN ON PROD ENVIRONMENT, DEPLOYING GLOBAL COMMANDS");
 						await rest.put(Routes.applicationCommands(this.client.config.client_id), { body: commands });
 				}
 

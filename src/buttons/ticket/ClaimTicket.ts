@@ -1,8 +1,7 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonInteraction, ButtonStyle, CategoryChannel, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { ApplicationCommandOptionType, ButtonInteraction, EmbedBuilder, PermissionsBitField } from "discord.js";
 import IzunaClient from "../../utils/classes/IzunaClient";
 import Categories from "../../utils/enums/Categories";
 import Button from "../../utils/classes/Button";
-import logger from "../../utils/logger";
 
 export default class OpenTicket extends Button {
     constructor(client: IzunaClient) {

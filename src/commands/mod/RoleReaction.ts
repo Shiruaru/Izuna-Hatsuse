@@ -1,9 +1,10 @@
-import { CacheType, ChatInputCommandInteraction, PermissionsBitField } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
 import Command from "../../utils/classes/Command"
 import IzunaClient from "../../utils/classes/IzunaClient";
 import Categories from "../../utils/enums/Categories";
 import { ApplicationCommandOptionType } from "discord.js"
 import logger from "../../utils/logger";
+import { title } from "process";
 
 export default class RoleReaction extends Command {
 		constructor(Izuna: IzunaClient) {
@@ -17,8 +18,8 @@ export default class RoleReaction extends Command {
 						default_member_permissions: PermissionsBitField.Flags.MentionEveryone,
 						options: [
 								{
-										name: "message-id",
-										description: "Id du message à enregistrer",
+										name: "description",
+										description: "description du champ",
 										required: true,
 										type: ApplicationCommandOptionType.String
 								},
@@ -33,6 +34,18 @@ export default class RoleReaction extends Command {
 										description: "Rôle à attribuer",
 										required: true,
 										type: ApplicationCommandOptionType.Role
+								},
+								{
+										name: "title",
+										description: "titre du message",
+										required: false,
+										type: ApplicationCommandOptionType.String
+								},
+								{
+										name: "message-id",
+										description: "Id du message à enregistrer",
+										required: false,
+										type: ApplicationCommandOptionType.String
 								}
 						]
 				})
@@ -40,23 +53,60 @@ export default class RoleReaction extends Command {
 
 		async Execute(interaction: ChatInputCommandInteraction<CacheType>) {
 				// Get the datas
-				const messageId = interaction.options.getString("message-id")!;
+				const description = interaction.options.getString("description")!;
+				let messageId = interaction.options.getString("message-id");
 				const reaction = interaction.options.getString("reaction")!;
 				const role = interaction.options.getRole("role")!;
+				const messageTitle = interaction.options.getString("title");
 
-
-				// Add reaction to the message
-				const messgage = await interaction.channel?.messages.fetch(messageId.toString());
-				if (!messgage) {
-						interaction.reply("Invalid message provided");
+				if (!messageId && !messageTitle) {
+						interaction.reply({ content: "Please provide a messageId or a title to proceed" });
+						return 
 				}
 
-				await messgage?.react(reaction)
+				if (messageId == null) {
+						// create the message & set message id to the role reaction
+            const embed = new EmbedBuilder()
+                .setTitle(messageTitle)
+                .setColor(this.client.config.embed_colors)
+								.setFooter({ text: `© Izuna` });
+
+						const meessage = await (interaction.channel as TextChannel).send({ embeds: [embed] })
+						messageId = meessage.id
+				} else if (!await this.client.databaseClient?.roleReaction.findFirst({
+						where: {
+								messageId: messageId
+						}
+				})) {
+						interaction.reply({ content: "Invalid message provided", flags: ["Ephemeral"] });
+						return
+				} 
+
+				// if the role reaction already exist, simply add the reaction to the embed
+
+				// Add reaction to the message
+				const message = await interaction.channel?.messages.fetch(messageId.toString());
+				if (!message) {
+						interaction.reply({ content: "Invalid message provided", flags: ["Ephemeral"] });
+				}
+
+				// recreate the embeds with the new fields
+				const newEmbed = new EmbedBuilder()
+						.setTitle(message?.embeds[0]?.title!)
+						.setFields(
+								...message?.embeds[0]?.fields!,
+								{ name: `${reaction} | ${description}`, value: "" },
+						)
+						.setColor(this.client.config.embed_colors)
+						.setFooter({ text: `© Izuna` });
+
+				await message?.edit({ embeds: [newEmbed] })
+
+				await message?.react(reaction)
 				.catch(err => {
-						interaction.reply("An error occured");
+						interaction.reply({ content: "An error occured", flags: ["Ephemeral"] });
 						logger.warn(err);
 				})
-
 
 				// then save the role reaction to database
 				await this.client.databaseClient?.roleReaction.create({
@@ -72,6 +122,6 @@ export default class RoleReaction extends Command {
 						console.log(err)
 				})
 
-				interaction.reply("Reaction role created")
+				interaction.reply({ flags: ["Ephemeral"], content: "Reaction role created" })
 		}
 }

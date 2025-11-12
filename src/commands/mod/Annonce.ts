@@ -10,7 +10,7 @@ export default class Annonce extends Command {
             name: "annonce",
             description: "créer un embed d'annonce",
             category: Categories.Utils,
-            default_member_permissions: PermissionsBitField.Flags.UseApplicationCommands,
+            default_member_permissions: PermissionsBitField.Flags.MentionEveryone,
             dm_permission: true,
             owner: false,
             custom: false,

@@ -9,7 +9,7 @@ export default class GameConfig extends Command {
             name: "game-config",
             description: "configuration de la fonctionnalité de messages",
             category: Categories.Utils,
-            default_member_permissions: PermissionsBitField.Flags.MentionEveryone,
+            default_member_permissions: PermissionsBitField.Flags.Administrator,
             dm_permission: false,
             owner: false,
             custom: true,

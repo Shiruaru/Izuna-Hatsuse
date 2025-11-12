@@ -9,7 +9,7 @@ export default class GameRemove extends Command {
             name: "game-remove",
             description: "Retirer un rôle associé à un jeu",
             category: Categories.Utils,
-            default_member_permissions: PermissionsBitField.Flags.UseApplicationCommands,
+            default_member_permissions: PermissionsBitField.Flags.Administrator,
             dm_permission: false,
             owner: false,
             custom: true,

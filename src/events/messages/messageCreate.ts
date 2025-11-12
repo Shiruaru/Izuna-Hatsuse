@@ -41,6 +41,7 @@ export default class MessageCreate extends Event {
 
 				// Anti-Spam
 				if (securityTable?.antiSpam) {
+						if (message.author.id == this.client.config.client_id) return;
 						console.log("security enabled")
 						const userId = message.author.id;
 						const now = Date.now()

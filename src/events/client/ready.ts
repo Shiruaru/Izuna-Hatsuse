@@ -19,28 +19,27 @@ export default class Ready extends Event {
 				console.log('Izuna is online on dev environment')
 
 				const commands = this.GetJson(this.client.commands);
-				const buttons = this.GetJson(this.client.buttons)
 
-				const interactions = [...commands, ...buttons];
 				const rest = new REST().setToken(this.client.config.discord_token)
 
 				await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, this.client.config.test_server_id), {
-						body: interactions
+						body: commands
 				})
+
 
 				// WARNING: TUF  server, disabling for dev purpose
 				const env = process.env.ENVIRONMENT;
 				if (env == "TEST") {
 						logger.status("Running on TEST env");
 						await rest.put(Routes.applicationGuildCommands(this.client.config.client_id, "811261520524607529"), {
-								body: interactions
+								body: commands
 						})
 				}
 
 				if (env == "PROD") {
 						// Deploying commands globally
 						logger.warn("RUNNIN ON PROD ENVIRONMENT, DEPLOYING GLOBAL COMMANDS");
-						await rest.put(Routes.applicationCommands(this.client.config.client_id), { body: interactions });
+						await rest.put(Routes.applicationCommands(this.client.config.client_id), { body: commands });
 				}
 
 				logger.status(`Successfuly deployed ${commands.length} commands`)

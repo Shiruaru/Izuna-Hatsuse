@@ -9,7 +9,7 @@ type Mess = {
 		timestamp: number
 }
 
-const TIME_WINDOW = 30000;
+const TIME_WINDOW = 20000;
 const THRESHOLD = 5;
 
 export default class MessageCreate extends Event {

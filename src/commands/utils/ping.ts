@@ -25,6 +25,6 @@ export default class Ping extends Command {
     }
 
     Execute(interaction: ChatInputCommandInteraction): void {
-        interaction.reply('Pong! updated')
+        interaction.reply({ content: "Pong!", flags: "Ephemeral" })
     }
 }
